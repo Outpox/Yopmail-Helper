@@ -1,0 +1,17 @@
+{
+	"generateButton": {
+		"message": "Générer une nouvelle adresse"
+	},
+	"copy": {
+		"message": "Copier"
+	},
+	"neverUsed": {
+		"message": "Jamais"
+	},
+	"lastUse": {
+		"message": "Dernière utilisation"
+	},
+	"adress": {
+		"message": "Adresse"
+	}
+}

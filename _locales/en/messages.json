@@ -1,0 +1,17 @@
+{
+	"generateButton": {
+		"message": "Generate a new email adress"
+	},
+	"copy": {
+		"message": "Copy"
+	},
+	"neverUsed": {
+		"message": "Never"
+	},
+	"lastUse": {
+		"message": "Last use"
+	},
+	"adress": {
+		"message": "Adress"
+	}
+}

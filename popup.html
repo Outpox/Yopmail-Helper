@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Yopmail helper</title>
+	<link rel="stylesheet" href="material.min.css" /> 
+	<style type="text/css">
+		html, body {
+			min-width: 200px;
+		}
+	</style>
+</head>
+<body>
+<table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" style="margin-bottom: 5%;">
+  <thead>
+    <tr>
+      <th class="mdl-data-table__cell--non-numeric" data-resource="adress"></th>
+      <th class="mdl-data-table__cell--non-numeric" style="text-align: center" data-resource="lastUse"></th>
+      <th class="mdl-data-table__cell--non-numeric" style="text-align: center" data-resource="copy"></th>
+    </tr>
+  </thead>
+  <tbody id="mailList">
+  </tbody>
+</table>
+
+<p style="text-align: center"><button class="mdl-button mdl-js-button mdl-button--raised" data-resource="generateButton" id="generateButton"></button></p>
+
+<script type="text/javascript" src="jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="popup.js"></script>
+</body>
+</html>
