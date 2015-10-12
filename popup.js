@@ -7,7 +7,9 @@ $(function(){
 		chrome.runtime.sendMessage({action: "generateNewMail", value: ""}, function(response) {
 			console.log(response);
 			if (response.message === "OK") {
-				addMailToDom(response.mail);
+				copyText(response.mail.adresse);
+				// addMailToDom(response.mail);
+				loadMailList();
 			}
 		});
 	});
@@ -15,21 +17,28 @@ $(function(){
 
 
 var mailList = [];
-chrome.storage.local.get("yh_mailList", function(data) {
-	if (data.yh_mailList !== undefined) {
-		mailList = data.yh_mailList;
-	}
-	init();
-});
+loadMailList();
+function loadMailList() {
+	chrome.runtime.sendMessage({action: "getMailList", value: ""}, function(response) {
+		console.log(response);
+		if (response.message === "OK") {
+			mailList = response.mailList;
+			init();
+		}
+	});
+}
 
 function init() {
+	mailListDom.empty();
 	for (var i = 0; i < mailList.length; i++) {
 		addMailToDom(mailList[i]);
 	};
 }
 
 function addMailToDom(mail) {
-	var tr = $("<tr></tr>");
+	console.log("adding mail");
+	console.log(mail);
+	var tr = $("<tr id='mail" + mail.id + "'></tr>");
 	var td1 = $("<td class='mdl-data-table__cell--non-numeric' style='text-align: center'></td>");
 	var a1 = $("<a href='" + baseUrl + mail.name + "' target='_blank'>" + mail.adresse + "</a>");
 	a1.on("click", function() {
@@ -43,11 +52,19 @@ function addMailToDom(mail) {
 		useMail(mail);
 		copyText(mail.adresse);
 	});
+	var del = $("<td class='mdl-data-table__cell--non-numeric' style='text-align: center'></td>");
+	var a3 = $("<a href='#'><img width='24' height='24' title='' alt='' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAABIAAAASABGyWs+AAAACXZwQWcAAAAYAAAAGAB4TKWmAAAAaElEQVRIx2NgGAUjFugwMDDsY2BgECVCrShUrQ4pFuxjYGD4z8DAcJmAJaJQNf+heogGyBpxWUKMGrItodhwfAZRzXBcllDVcGyWkGQ4E7VcMGiDiKaRTNNkSvOMRvOiguaF3SgYRgAA1bo+/as5g9sAAAAASUVORK5CYII='/></a>");
+	a3.on("click", function() {
+		$("#mail" + mail.id).remove();
+		deleteMail(mail);
+	});
 	td1.append(a1);
 	tr.append(td1);
 	tr.append(lastUse);
 	copy.append(a2);
+	del.append(a3);
 	tr.append(copy);
+	tr.append(del);
 	mailListDom.append(tr);
 	translate();
 }
@@ -77,9 +94,18 @@ function copyText(text) {
 }
 
 function useMail(mail) {
-	console.log(mail);
 	mail.lastUsed = Date();
+	mail.usageCount++;
 	syncAndSave();
+	init();
+}
+
+function deleteMail(mail) {
+	chrome.runtime.sendMessage({action: "deleteMail", value: mail.id}, function(response) {
+		if (response.message === "OK") {
+			loadMailList();
+		}
+	});
 }
 
 function syncAndSave() {

@@ -21,10 +21,9 @@ function getMail(id) {
 	return null;
 }
 
-
 mailList.saveAndSync = function() {
 	// chrome.storage.sync.set({"yh_mailList": mailList});
-	chrome.storage.local.set({"yh_mailList": mailList});
+	chrome.storage.sync.set({"yh_mailList": mailList});
 };
 mailList.updateValues = function (newVal) {
 	mailList.length = 0;
@@ -33,14 +32,19 @@ mailList.updateValues = function (newVal) {
 	};
 };
 mailList.load = function () {
-	chrome.storage.local.get("yh_mailList", function(data) {
+	chrome.storage.sync.get("yh_mailList", function(data) {
 		if (data.yh_mailList !== undefined) {
 			mailList = data.yh_mailList;
 		}
 	})
 };
 
-mailList.load();
+function deleteMail(id) {
+	for (var i = 0; i < mailList.length; i++) {
+		if (mailList[i].id === id)
+			mailList.splice(i, 1);
+	};
+}
 
 function randomMail() {
 	return (Math.random()*1e32).toString(36);
@@ -56,6 +60,14 @@ chrome.runtime.onMessage.addListener(
 			case "updateMailList":
 				mailList.updateValues(request.value);
 				mailList.saveAndSync();
+				break;
+			case "getMailList":
+				sendResponse({message: "OK", mailList: mailList});
+				break;
+			case "deleteMail":
+				deleteMail(request.value);
+				sendResponse({message: "OK", mailList: mailList});
+				break;
 		}
 	}
 );

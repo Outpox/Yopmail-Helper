@@ -5,6 +5,9 @@
 	"copy": {
 		"message": "Copier"
 	},
+	"delete": {
+		"message": "Supprimer"
+	},
 	"neverUsed": {
 		"message": "Jamais"
 	},
