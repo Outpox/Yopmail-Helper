@@ -96,10 +96,15 @@ function deleteMail(mail) {
 	chrome.runtime.sendMessage({action: "deleteMail", value: mail.id}, function(response) {
 		if (response.message === "OK") {
 			loadMailList();
+			resizePopup();
 		}
 	});
 }
 
 function syncAndSave() {
 	chrome.runtime.sendMessage({action: "updateMailList", value: mailList}, function(response) {});
+}
+
+function resizePopup() {
+	$('html').height($('#main').height());
 }
