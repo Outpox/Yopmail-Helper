@@ -79,18 +79,10 @@ function translate() {
 }
 
 function copyText(text) {
-    var textField = document.createElement('textarea');
+    var textField = document.getElementById("taCopy");
     textField.innerText = text;
-    textField.style.height = '0';
-    textField.style.padding = '0';
-    textField.style.margin = '0';
-    textField.style.outline = '0';
-    textField.style.float = 'left';
-    textField.style.display = 'block';
-    document.body.appendChild(textField);
     textField.select();
     document.execCommand('copy');
-    textField.remove();
 }
 
 function useMail(mail) {
