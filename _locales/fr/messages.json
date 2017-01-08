@@ -16,5 +16,8 @@
 	},
 	"adress": {
 		"message": "Adresse"
+	},
+	"manualAddress": {
+		"message": "Ajouter une adresse"
 	}
 }

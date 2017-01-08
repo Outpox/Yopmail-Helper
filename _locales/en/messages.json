@@ -1,20 +1,23 @@
 {
-	"generateButton": {
-		"message": "Generate a new email adress"
-	},
-	"copy": {
-		"message": "Copy"
-	},
-	"delete": {
-		"message": "Delete"
-	},
-	"neverUsed": {
-		"message": "Never"
-	},
-	"lastUse": {
-		"message": "Last use"
-	},
-	"adress": {
-		"message": "Adress"
-	}
+  "generateButton": {
+    "message": "Generate a new email address"
+  },
+  "copy": {
+    "message": "Copy"
+  },
+  "delete": {
+    "message": "Delete"
+  },
+  "neverUsed": {
+    "message": "Never"
+  },
+  "lastUse": {
+    "message": "Last used"
+  },
+  "adress": {
+    "message": "Adress"
+  },
+  "manualAddress": {
+    "message": "Add a custom address"
+  }
 }

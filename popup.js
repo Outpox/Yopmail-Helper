@@ -3,16 +3,39 @@ var mailListDom = $("#mailList");
 
 $(function(){
 	translate();
+	var customInputButton = $("#manualAddress"),
+		customaddressInput = $("#customAddressInput");
+
 	$("#generateButton").on("click", function() {
 		chrome.runtime.sendMessage({action: "generateNewMail", value: ""}, function(response) {
 			console.log(response);
 			if (response.message === "OK") {
-				copyText(response.mail.adresse);
-				// addMailToDom(response.mail);
-				loadMailList();
+				copyText(response.newMail.adresse);
+				mailList = response.mailList;
+				init();
 			}
 		});
 	});
+    customInputButton.on("click", function () {
+        customInputButton.hide();
+        customaddressInput.show().focus();
+    });
+    customaddressInput.on("blur", function () {
+        customInputButton.show();
+        customaddressInput.hide();
+        customaddressInput.val("");
+    });
+    customaddressInput.keypress(function(e) {
+        if(e.which == 13) {
+            chrome.runtime.sendMessage({action: "generateNewMail", value: customaddressInput.val()}, function(response) {
+                console.log(response);
+                if (response.message === "OK") {
+                    copyText(response.newMail.adresse);
+                    loadMailList();
+                }
+            });
+        }
+    });
 });
 
 
@@ -30,9 +53,9 @@ function loadMailList() {
 
 function init() {
 	mailListDom.empty();
-	for (var i = 0; i < mailList.length; i++) {
-		addMailToDom(mailList[i]);
-	};
+	for (var i = 0; i < mailList.content.length; i++) {
+		addMailToDom(mailList.content[i]);
+	}
 }
 
 function addMailToDom(mail) {
@@ -86,23 +109,23 @@ function copyText(text) {
 }
 
 function useMail(mail) {
-	mail.lastUsed = Date();
+	mail.lastUsed = Date.now();
 	mail.usageCount++;
-	syncAndSave();
+    updateMail(mail);
 	init();
 }
 
 function deleteMail(mail) {
-	chrome.runtime.sendMessage({action: "deleteMail", value: mail.id}, function(response) {
-		if (response.message === "OK") {
-			loadMailList();
-			resizePopup();
-		}
+	chrome.runtime.sendMessage({action: "deleteMail", value: mail}, function(response) {
+        mailList = response.mailList;
+        resizePopup();
 	});
 }
 
-function syncAndSave() {
-	chrome.runtime.sendMessage({action: "updateMailList", value: mailList}, function(response) {});
+function updateMail(mail) {
+	chrome.runtime.sendMessage({action: "updateMail", value: mail}, function (response) {
+        mailList = response.mailList;
+    });
 }
 
 function resizePopup() {
