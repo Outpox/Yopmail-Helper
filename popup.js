@@ -8,9 +8,8 @@ $(function(){
 
 	$("#generateButton").on("click", function() {
 		chrome.runtime.sendMessage({action: "generateNewMail", value: ""}, function(response) {
-			console.log(response);
 			if (response.message === "OK") {
-				copyText(response.newMail.adresse);
+				copyText(response.newMail.address);
 				mailList = response.mailList;
 				init();
 			}
@@ -28,9 +27,8 @@ $(function(){
     customaddressInput.keypress(function(e) {
         if(e.which == 13) {
             chrome.runtime.sendMessage({action: "generateNewMail", value: customaddressInput.val()}, function(response) {
-                console.log(response);
                 if (response.message === "OK") {
-                    copyText(response.newMail.adresse);
+                    copyText(response.newMail.address);
                     loadMailList();
                 }
             });
@@ -43,7 +41,6 @@ var mailList = [];
 loadMailList();
 function loadMailList() {
 	chrome.runtime.sendMessage({action: "getMailList", value: ""}, function(response) {
-		console.log(response);
 		if (response.message === "OK") {
 			mailList = response.mailList;
 			init();
@@ -59,11 +56,9 @@ function init() {
 }
 
 function addMailToDom(mail) {
-	console.log("adding mail");
-	console.log(mail);
 	var tr = $("<tr id='mail" + mail.id + "'></tr>");
 	var td1 = $("<td class='mdl-data-table__cell--non-numeric' style='text-align: center'></td>");
-	var a1 = $("<a href='" + baseUrl + mail.name + "' target='_blank'>" + mail.adresse + "</a>");
+	var a1 = $("<a href='" + baseUrl + mail.name + "' target='_blank'>" + mail.address + "</a>");
 	a1.on("click", function() {
 		useMail(mail);
 	});
@@ -73,7 +68,7 @@ function addMailToDom(mail) {
 	var a2 = $("<a href='#'><img width='24' height='24' title='' alt='' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAABIAAAASABGyWs+AAAACXZwQWcAAAAYAAAAGAB4TKWmAAAAYElEQVRIx2NgoCPwYmBgeMTAwPCfREw0eEyG4SRZQLIGYgATtQ0kxQJy4uQRVB9RQURunDwm1gJy4gRDz4DGwagFoxaMFAtYkNiMQ9IHw9uCJ1Ca1OrzCQORgOoVDk0AAPQGWyAE8AECAAAAAElFTkSuQmCC'/></a>");
 	a2.on("click", function() {
 		useMail(mail);
-		copyText(mail.adresse);
+		copyText(mail.address);
 	});
 	var del = $("<td class='mdl-data-table__cell--non-numeric' style='text-align: center'></td>");
 	var a3 = $("<a href='#'><img width='24' height='24' title='' alt='' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAABIAAAASABGyWs+AAAACXZwQWcAAAAYAAAAGAB4TKWmAAAAaElEQVRIx2NgGAUjFugwMDDsY2BgECVCrShUrQ4pFuxjYGD4z8DAcJmAJaJQNf+heogGyBpxWUKMGrItodhwfAZRzXBcllDVcGyWkGQ4E7VcMGiDiKaRTNNkSvOMRvOiguaF3SgYRgAA1bo+/as5g9sAAAAASUVORK5CYII='/></a>");

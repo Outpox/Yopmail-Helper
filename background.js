@@ -2,7 +2,7 @@ var domain = "yopmail.com";
 
 var Mail = function (customAddress) {
 	this.name = customAddress ? customAddress : randomMail();
-	this.adresse = customAddress ? customAddress : this.name + "@" + domain;
+	this.address = customAddress ? customAddress : this.name + "@" + domain;
 	this.created = Date.now();
 	this.lastUsed = null;
 	this.id = mailList.counter++;

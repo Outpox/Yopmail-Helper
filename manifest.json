@@ -3,7 +3,7 @@
 
 	"name": "Yopmail Helper",
 	"description": "This extension helps you with your yopmail adresses.",
-	"version": "1.5",
+	"version": "1.6",
 	"icons": {
 		"48": "img/icon.png"
 	},
