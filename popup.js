@@ -1,5 +1,6 @@
-var baseUrl = "http://yopmail.com/en/";
-var mailListDom = $("#mailList");
+var BASE_URL    = "http://yopmail.com/en/",
+    mailListDom = $("#mailList"),
+    API_URL     = 'https://api.outpox.fr/yhs/';
 
 $(function(){
 	translate();
@@ -26,7 +27,11 @@ $(function(){
     });
     customaddressInput.keypress(function(e) {
         if(e.which == 13) {
-            chrome.runtime.sendMessage({action: "generateNewMail", value: customaddressInput.val()}, function(response) {
+            var address = customaddressInput.val();
+            if (address.indexOf('@yopmail.com') == -1) {
+                address += '@yopmail.com';
+            }
+            chrome.runtime.sendMessage({action: "generateNewMail", value: address}, function(response) {
                 if (response.message === "OK") {
                     copyText(response.newMail.address);
                     loadMailList();
@@ -58,10 +63,16 @@ function init() {
 function addMailToDom(mail) {
 	var tr = $("<tr id='mail" + mail.id + "'></tr>");
 	var td1 = $("<td class='mdl-data-table__cell--non-numeric' style='text-align: center'></td>");
-	var a1 = $("<a href='" + baseUrl + mail.name + "' target='_blank'>" + mail.address + "</a>");
+	var a1 = $("<a href='" + BASE_URL + mail.name + "' target='_blank'>" + mail.address + "</a>");
 	a1.on("click", function() {
 		useMail(mail);
 	});
+	var mailCountId = 'loading_' + mail.id;
+    var mailCount = $("<td style='text-align: center;'><img id='" + mailCountId + "' src='img/ajax-loader.gif' alt=''></td>");
+    getMailCount(mail, function (apiResponse) {
+        $("#" + mailCountId).remove();
+        mailCount.append(apiResponse.mailCount);
+    });
 	var lastUsed = mail.lastUsed === null ? chrome.i18n.getMessage('neverUsed') : new Date(mail.lastUsed);
 	var lastUse = $("<td class='mdl-data-table__cell--non-numeric' style='text-align: center'>" + lastUsed.toLocaleString() + "</td>");
 	var copy = $("<td class='mdl-data-table__cell--non-numeric' style='text-align: center'></td>");
@@ -78,6 +89,7 @@ function addMailToDom(mail) {
 	});
 	td1.append(a1);
 	tr.append(td1);
+    tr.append(mailCount);
 	tr.append(lastUse);
 	copy.append(a2);
 	del.append(a3);
@@ -125,4 +137,15 @@ function updateMail(mail) {
 
 function resizePopup() {
 	$('html').height($('#main').height());
+}
+
+function getMailCount(mail, callback) {
+    var url = API_URL + mail.name;
+    fetch(url)
+        .then(function (resp) {
+            return resp.json();
+        })
+        .then(function (response) {
+            callback(response);
+        })
 }
